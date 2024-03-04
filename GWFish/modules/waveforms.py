@@ -92,8 +92,8 @@ def t_of_f_PN(parameters, frequencyvector):
     term, which does not matter for SNR calculations.
     """
 
-    M1 = parameters['mass_1'] * (1 + parameters['redshift']) * cst.Msol
-    M2 = parameters['mass_2'] * (1 + parameters['redshift']) * cst.Msol
+    M1 = parameters['mass_1'] * cst.Msol# * (1 + parameters['redshift'])
+    M2 = parameters['mass_2'] * cst.Msol# * (1 + parameters['redshift'])
 
     M = M1 + M2
     mu = M1 * M2 / M
@@ -102,8 +102,8 @@ def t_of_f_PN(parameters, frequencyvector):
 
     t_of_f = -5./(256.*np.pi**(8/3))/Mc**(5/3)/frequencyvector**(8/3)
 
-    return t_of_f+parameters['geocent_time']
-
+    #return t_of_f+parameters['geocent_time']
+    return parameters['geocent_time']*np.ones_like(t_of_f) #switch off Earth rotation
 
 class Waveform:
     def __init__(self, name, gw_params, data_params):
@@ -268,8 +268,8 @@ class LALFD_Waveform(Waveform):
             self._lalsim_caller = lalsim.SimInspiralChooseFDWaveformSequence
             self._lalsim_args = [
                 self.gw_params['phase'],
-                self.gw_params['mass_1'] * lal.MSUN_SI * (1 + self.gw_params['redshift']),  # in [kg]
-                self.gw_params['mass_2'] * lal.MSUN_SI * (1 + self.gw_params['redshift']),  # in [kg]
+                self.gw_params['mass_1'] * lal.MSUN_SI,# * (1 + self.gw_params['redshift']),  # in [kg]
+                self.gw_params['mass_2'] * lal.MSUN_SI,# * (1 + self.gw_params['redshift']),  # in [kg]
                 self.gw_params['spin_1x'], self.gw_params['spin_1y'], self.gw_params['spin_1z'], 
                 self.gw_params['spin_2x'], self.gw_params['spin_2y'], self.gw_params['spin_2z'],
                 self.f_ref,  # reference frequency
@@ -283,8 +283,8 @@ class LALFD_Waveform(Waveform):
             self._waveform_postprocessing = self._hf_postproccessing_SimInspiralFD
             self._lalsim_caller = lalsim.SimInspiralFD
             self._lalsim_args = [
-                self.gw_params['mass_1'] * lal.MSUN_SI * (1 + self.gw_params['redshift']),  # in [kg]
-                self.gw_params['mass_2'] * lal.MSUN_SI * (1 + self.gw_params['redshift']),  # in [kg]
+                self.gw_params['mass_1'] * lal.MSUN_SI,# * (1 + self.gw_params['redshift']),  # in [kg]
+                self.gw_params['mass_2'] * lal.MSUN_SI,# * (1 + self.gw_params['redshift']),  # in [kg]
                 self.gw_params['spin_1x'], self.gw_params['spin_1y'], self.gw_params['spin_1z'], 
                 self.gw_params['spin_2x'], self.gw_params['spin_2y'], self.gw_params['spin_2z'],
                 self.gw_params['luminosity_distance'] * lal.PC_SI * 1e6,  # in [m]
