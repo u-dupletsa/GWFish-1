@@ -351,10 +351,12 @@ class LALFD_Waveform(Waveform):
 
     def _fd_phase_correction_geocent_time(self):
         """ Add initial 2pi*f*tc - phic - pi/4 to phase """
-        phi_in = np.exp(1.j*(2*self.frequencyvector*np.pi*self.gw_params['geocent_time']))
+        phi_in = np.exp(-1.j*(2*self.frequencyvector*np.pi*self.gw_params['geocent_time']))
 
-        hfp = phi_in * np.conjugate(self.hf_plus_out)  # it's already multiplied by the phase
-        hfc = phi_in * np.conjugate(self.hf_cross_out)
+        #hfp = phi_in * np.conjugate(self.hf_plus_out)  # it's already multiplied by the phase
+        #hfc = phi_in * np.conjugate(self.hf_cross_out)
+        hfp = phi_in * self.hf_plus_out  # it's already multiplied by the phase
+        hfc = phi_in * self.hf_cross_out
 
         return hfp, hfc
 
@@ -572,8 +574,8 @@ class TaylorF2(Waveform):
         self.psi *= 3. / (128. * eta * v ** 5)
         self.psi += 2. * np.pi * ff * tc - phic - np.pi / 4.
     
-        phase = np.exp(1.j * self.psi)
-        polarizations = np.hstack((hp * phase, hc * 1.j * phase))
+        phase = np.exp(-1.j * self.psi)
+        polarizations = np.hstack((hp * phase, hc * (-1.j) * phase))
 
         # very crude high-f cut-off:
         polarizations[np.where(ff[:,0] > 4 * f_isco), :] = 0.j
@@ -856,7 +858,7 @@ class IMRPhenomD(Waveform):
     
     
         # Construct the phase
-        phase = np.exp(1.j * psi_tot)
+        phase = np.exp(-1.j * psi_tot)
         #########################################################################################################
         #########################################################################################################
         #########################################################################################################
@@ -972,7 +974,7 @@ class IMRPhenomD(Waveform):
     
         hp = amp_tot*0.5*(1 + np.cos(iota)**2.)
         hc = amp_tot*np.cos(iota)
-        polarizations = np.hstack((hp * phase, hc * 1.j * phase))
+        polarizations = np.hstack((hp * phase, hc * (-1.j) * phase))
     
         self._frequency_domain_strain = polarizations
 

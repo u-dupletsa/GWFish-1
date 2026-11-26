@@ -133,9 +133,9 @@ class Derivative:
         if target_parameter == 'luminosity_distance':
             derivative = -1. / self.local_params[target_parameter] * self.projection_at_parameters
         elif target_parameter == 'geocent_time':
-            derivative = 2j * np.pi * self.detector.frequencyvector * self.projection_at_parameters
-        elif target_parameter == 'phase':
-            derivative = -1j * self.projection_at_parameters
+            derivative = -2j * np.pi * self.detector.frequencyvector * self.projection_at_parameters
+        #elif target_parameter == 'phase':
+        #    derivative = -1j * self.projection_at_parameters
         else:
             pv = self.local_params[target_parameter]
 
@@ -178,7 +178,7 @@ class Derivative:
                 signal2 = det.projection(self.pv_set2, self.detector, wave2, t_of_f2 + self.tc)
     
 
-                derivative = np.exp(2j * np.pi * self.detector.frequencyvector \
+                derivative = np.exp(-2j * np.pi * self.detector.frequencyvector \
                                     * self.tc) * (signal2 - signal1) / dp
                                     
         self.waveform_object.update_gw_params(self.local_params)
